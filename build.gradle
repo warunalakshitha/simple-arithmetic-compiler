@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.ow2.asm:asm:9.3'  // ASM for bytecode generation
+    testImplementation 'org.testng:testng:7.7.1' // Unit tests
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
+jar {
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    manifest {
+        attributes 'Implementation-Title': 'Simple Compiler',
+                'Implementation-Version': version,
+                'Main-Class': 'org.waruna.compiler.Main'
+    }
+    archiveBaseName.set('simple-compiler')
+}
+
+test {
+    useTestNG()
+}
